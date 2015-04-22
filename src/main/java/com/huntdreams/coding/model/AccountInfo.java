@@ -113,7 +113,14 @@ public class AccountInfo {
     // 背景图缓存文件夹
     private static final String BACKGROUNDS = "BACKGROUNDS";
 
-    private static void saveBackgrounds(Context context,ArrayList<LoginBackground.PhotoItem> data){
-
+    // 保存背景图片的数据
+    public static void saveBackgrounds(Context context,ArrayList<LoginBackground.PhotoItem> data){
+        new DataCache<LoginBackground.PhotoItem>().save(context,data,BACKGROUNDS);
     }
+
+    // 加载缓存的背景图
+    public static ArrayList<LoginBackground.PhotoItem> loadBackgrounds(Context context){
+        return new DataCache<LoginBackground.PhotoItem>().load(context,BACKGROUNDS);
+    }
+
 }
