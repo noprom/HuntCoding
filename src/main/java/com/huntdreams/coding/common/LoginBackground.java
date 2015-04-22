@@ -8,10 +8,12 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 登陆背景
@@ -44,7 +46,14 @@ public class LoginBackground {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d(TAG,"get detail in onSuccess()");
                     if(response.optInt("code",-1) == 0){
+                        ArrayList<PhotoItem> photoItems = new ArrayList<PhotoItem>();
+                        JSONArray data = response.optJSONArray("data");
+                        for(int i = 0,len = data.length();i<len;++i){
+                            PhotoItem item = new PhotoItem(data.optJSONObject(i));
+                            photoItems.add(item);
+                        }
 
+                        // TODO
                     }
                 }
             });
