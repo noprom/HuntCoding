@@ -59,7 +59,18 @@ public class LoginBackground {
                         downloadPhotos();
                     }
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                }
+
+                @Override
+                public void onFinish() {
+                    AccountInfo.setCheckLoginBackground(context);
+                }
             });
+        }else{
+            downloadPhotos();
         }
 
 
