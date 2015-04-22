@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.huntdreams.coding.common.network.MyAsyncHttpClient;
+import com.huntdreams.coding.model.AccountInfo;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -53,7 +55,8 @@ public class LoginBackground {
                             photoItems.add(item);
                         }
 
-                        // TODO
+                        AccountInfo.saveBackgrounds(context,photoItems);
+                        downloadPhotos();
                     }
                 }
             });
@@ -67,6 +70,35 @@ public class LoginBackground {
         return true;
     }
 
+    /**
+     * 下载图片
+     */
+    private void downloadPhotos(){
+        if(!Global.isWifiConnected(context))
+            return;
+
+        ArrayList<PhotoItem> lists = AccountInfo.loadBackgrounds(context);
+        for(PhotoItem item:lists){
+            File file = item.getCacheFile(context);
+            if(!file.exists()){
+                AsyncHttpClient client = MyAsyncHttpClient.createClient(context);
+                String url = String.format("%s?imageMogr2/thumbnail/!%d", item.getUrl(), MyApp.sWidthPix);
+                client.get(context, url, new FileAsyncHttpResponseHandler(file) {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, File file) {
+
+                    }
+                });
+                // 图片较大，可能有几兆，超时设长一点
+                client.setTimeout(10 * 60 * 1000);
+            }
+        }
+    }
     /**
      * PhotoItem 类
      */
