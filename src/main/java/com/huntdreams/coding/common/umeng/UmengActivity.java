@@ -29,5 +29,5 @@ public class UmengActivity extends ActionBarActivity{
         MobclickAgent.onPause(this);
     }
 
-    
+
 }

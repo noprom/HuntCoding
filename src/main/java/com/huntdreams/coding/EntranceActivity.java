@@ -1,9 +1,16 @@
 package com.huntdreams.coding;
 
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.net.Uri;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.huntdreams.coding.common.Global;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.AnimationRes;
 
 /**
  * 项目入口文件
@@ -13,12 +20,27 @@ import org.androidannotations.annotations.EActivity;
  * Created by noprom on 2015/4/24.
  */
 @EActivity(R.layout.entrance_image)
-public class EntranceActivity extends ActionBarActivity {
+public class EntranceActivity extends BaseActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @ViewById
+    ImageView image;
 
-    }
+    @ViewById
+    TextView title;
+
+    @ViewById
+    View mask;
+
+    @ViewById
+    View logo;
+
+    @AnimationRes
+    Animation entrance;
+
+    Uri background = null;
+
+    static final String HOST_CURRENT = Global.HOST + "/api/current_user";
+
+    boolean mNeedUpdateUser = false;
 
 }
