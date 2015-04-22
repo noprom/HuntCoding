@@ -3,6 +3,7 @@ package com.huntdreams.coding.common;
 import android.content.Context;
 import android.util.Log;
 
+import com.huntdreams.coding.MyApp;
 import com.huntdreams.coding.common.network.MyAsyncHttpClient;
 import com.huntdreams.coding.model.AccountInfo;
 import com.loopj.android.http.AsyncHttpClient;
