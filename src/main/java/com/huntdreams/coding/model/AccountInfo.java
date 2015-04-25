@@ -22,6 +22,101 @@ import java.util.Calendar;
  */
 public class AccountInfo {
 
+    /**
+     * 退出登录
+     * @param context
+     */
+    public static void loginOut(Context context){
+        File dir = context.getFilesDir();
+        String[] fileNameList = dir.list();
+        for(String item : fileNameList){
+            File file = new File(dir,item);
+            if(file.exists() && !file.isDirectory()){
+                file.delete();
+            }
+        }
+        AccountInfo.setNeedPush(context, true);
+    }
+
+    private static final String ACCOUNT = "ACCOUNT";
+
+    /**
+     * 保存账户信息
+     * @param context
+     * @param data
+     */
+    public static void saveAccount(Context context,UserObject data){
+        File file = new File(context.getFilesDir(),ACCOUNT);
+        if(file.exists())
+            file.delete();
+
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(ACCOUNT,Context.MODE_PRIVATE));
+            oos.writeObject(data);
+            oos.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 加载用户信息
+     * @param context
+     * @return
+     */
+    public static UserObject loadAccount(Context context){
+        UserObject data = null;
+        File file = new File(context.getFilesDir(),ACCOUNT);
+        if(file.exists()){
+            try{
+                ObjectInputStream ois = new ObjectInputStream(context.openFileInput(ACCOUNT));
+                data = (UserObject) ois.readObject();
+                ois.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        if(data == null)
+            data = new UserObject();
+
+        return data;
+    }
+
+    /**
+     * 判断用户是否登陆
+     * @param context
+     * @return
+     */
+    public static boolean isLogin(Context context){
+        File file = new File(context.getFilesDir(),ACCOUNT);
+        return file.exists();
+    }
+
+    private static String FILE_PUSH = "FILE_PUSH";
+    private static String KEY_NEED_PUSH = "KEY_NEED_PUSH";
+
+    /**
+     * 获得是否需要推送
+     * @param context
+     * @return
+     */
+    public static boolean getNeedPush(Context context){
+        SharedPreferences sp = context.getSharedPreferences(FILE_PUSH,Context.MODE_PRIVATE);
+        return sp.getBoolean(KEY_NEED_PUSH,true);
+    }
+
+    /**
+     * 设置是否推送
+     * @param context
+     * @param push
+     */
+    public static void setNeedPush(Context context,boolean push){
+        SharedPreferences sp = context.getSharedPreferences(FILE_PUSH,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(KEY_NEED_PUSH,push);
+        editor.commit();
+    }
 
     private static final String GLOBAL_SETTING = "GLOBAL_SETTING";
     private static final String GLOBAL_SETTING_BACKGROUND = "GLOBAL_SETTING_BACKGROUND";

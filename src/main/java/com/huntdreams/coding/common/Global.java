@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,5 +96,46 @@ public class Global {
             }
         }
         return false;
+    }
+
+    /**
+     * 替换头像
+     * @param json
+     * @return
+     */
+    public static String replaceAvatar(JSONObject json) {
+        return replaceUrl(json, "avatar");
+    }
+
+    /**
+     * 获得错误信息
+     * @param jsonObject
+     * @return
+     */
+    public static String getErrorMsg(JSONObject jsonObject) {
+        String s = "";
+        try {
+            JSONObject jsonData = jsonObject.getJSONObject("msg");
+            String key = (String) jsonData.keys().next();
+            s = jsonData.getString(key);
+        } catch (Exception e) {
+        }
+
+        return s;
+    }
+
+    /**
+     * 替换URL
+     * @param json
+     * @param name
+     * @return
+     */
+    public static String replaceUrl(JSONObject json, String name) {
+        String s = json.optString(name);
+        if (s.indexOf("/static") == 0) {
+            return Global.HOST + s;
+        }
+
+        return s;
     }
 }

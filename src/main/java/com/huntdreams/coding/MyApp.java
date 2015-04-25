@@ -5,11 +5,10 @@ import android.app.Application;
 import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
+import com.huntdreams.coding.common.PhoneType;
+import com.huntdreams.coding.common.Unread;
+import com.huntdreams.coding.model.AccountInfo;
+import com.huntdreams.coding.model.UserObject;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        initImageLoader(this);
+//        initImageLoader(this);
 
         if (!PhoneType.isX86()) {
             // x86的机器上会抛异常，因为百度没有提供x86的.so文件
@@ -69,21 +68,21 @@ public class MyApp extends Application {
         sUnread = new Unread();
     }
 
-    public static void initImageLoader(Context context) {
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
-                .diskCacheFileCount(300)
-                .imageDownloader(new MyImageDownloader(context))
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-//                .writeDebugLogs() // Remove for release app
-                .diskCacheExtraOptions(sWidthPix / 3, sWidthPix / 3, null)
-                .build();
-
-        ImageLoader.getInstance().init(config);
-    }
+//    public static void initImageLoader(Context context) {
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+//                .threadPriority(Thread.NORM_PRIORITY - 2)
+//                .denyCacheImageMultipleSizesInMemory()
+//                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+//                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+//                .diskCacheFileCount(300)
+//                .imageDownloader(new MyImageDownloader(context))
+//                .tasksProcessingOrder(QueueProcessingType.LIFO)
+////                .writeDebugLogs() // Remove for release app
+//                .diskCacheExtraOptions(sWidthPix / 3, sWidthPix / 3, null)
+//                .build();
+//
+//        ImageLoader.getInstance().init(config);
+//    }
 
 
     private static String getProcessName(Context context) {

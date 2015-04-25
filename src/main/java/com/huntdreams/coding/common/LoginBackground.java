@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * 登陆背景
@@ -83,6 +84,27 @@ public class LoginBackground {
     }
 
     /**
+     * 随机获取一张图片
+     * @return
+     */
+    public PhotoItem getPhoto(){
+        ArrayList<PhotoItem> list = AccountInfo.loadBackgrounds(context);
+        ArrayList<PhotoItem> cached = new ArrayList<PhotoItem>();
+        for(PhotoItem item : list){
+            if(item.isCached(context)){
+                cached.add(item);
+            }
+        }
+
+        int max = cached.size();
+        if(max == 0)
+            return new PhotoItem();
+
+        int index = new Random().nextInt(max);
+        return cached.get(index);
+    }
+
+    /**
      * 下载图片
      */
     private void downloadPhotos(){
@@ -111,6 +133,7 @@ public class LoginBackground {
             }
         }
     }
+
     /**
      * PhotoItem 类
      */

@@ -7,7 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huntdreams.coding.common.Global;
+import com.huntdreams.coding.common.LoginBackground;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.AnimationRes;
@@ -43,4 +45,8 @@ public class EntranceActivity extends BaseActivity {
 
     boolean mNeedUpdateUser = false;
 
+    @AfterViews
+    void init(){
+        LoginBackground.PhotoItem photoItem = new LoginBackground(this).getPhoto();
+    }
 }
