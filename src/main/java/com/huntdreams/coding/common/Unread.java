@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 用户未读消息
+ * 用户未读消息实体
  *
  * @author noprom (https://github.com/noprom)
  * @version 1.0

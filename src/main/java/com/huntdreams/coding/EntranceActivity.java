@@ -2,6 +2,7 @@ package com.huntdreams.coding;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.huntdreams.coding.common.Global;
 import com.huntdreams.coding.common.LoginBackground;
+import com.huntdreams.coding.common.UnreadNotify;
 import com.huntdreams.coding.model.AccountInfo;
 import com.huntdreams.coding.model.UserObject;
 
@@ -130,21 +132,21 @@ public class EntranceActivity extends BaseActivity {
 
     void next() {
         Toast.makeText(this,"登录啊",Toast.LENGTH_LONG).show();
-//        Intent intent;
-//        String mGlobalKey = AccountInfo.loadAccount(this).global_key;
-//        if (mGlobalKey.isEmpty()) {
-//            intent = new Intent(this, LoginActivity_.class);
-//            if (background != null) {
-//                intent.putExtra("background", background);
-//            }
-//        } else {
-//            intent = new Intent(this, MainActivity_.class);
-//        }
-//
-//        startActivity(intent);
-//
-//        UnreadNotify.update(this);
-//        finish();
-//        overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
+        Intent intent;
+        String mGlobalKey = AccountInfo.loadAccount(this).global_key;
+        if (mGlobalKey.isEmpty()) {
+            intent = new Intent(this, LoginActivity_.class);
+            if (background != null) {
+                intent.putExtra("background", background);
+            }
+        } else {
+            intent = new Intent(this, LoginActivity_.class);
+        }
+
+        startActivity(intent);
+
+        UnreadNotify.update(this);
+        finish();
+        overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
     }
 }
