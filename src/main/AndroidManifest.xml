@@ -14,10 +14,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/ActionbarNoIcon" >
         <activity
             android:name=".EntranceActivity_"
             android:icon="@drawable/ic_launcher"

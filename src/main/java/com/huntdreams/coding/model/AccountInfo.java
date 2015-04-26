@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -116,6 +117,28 @@ public class AccountInfo {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(KEY_NEED_PUSH,push);
         editor.commit();
+    }
+
+    private static final String USER_RELOGIN_INFO = "USER_RELOGIN_INFO";
+
+    /**
+     * 保存重新登录信息
+     * @param ctx
+     * @param email
+     * @param globayKey
+     */
+    public static void saveReloginInfo(Context ctx, String email, String globayKey) {
+        DataCache<Pair> dateCache = new DataCache<>();
+        ArrayList<Pair> listData = dateCache.loadGlobal(ctx, USER_RELOGIN_INFO);
+        for (int i = 0; i < listData.size(); ++i) {
+            if (listData.get(i).second.equals(globayKey)) {
+                listData.remove(i);
+                --i;
+            }
+        }
+
+        listData.add(new Pair(email, globayKey));
+        dateCache.saveGlobal(ctx, listData, USER_RELOGIN_INFO);
     }
 
     private static final String GLOBAL_SETTING = "GLOBAL_SETTING";
@@ -231,6 +254,15 @@ public class AccountInfo {
         }
     }
 
+    static class Pair implements Serializable{
+        public String first;
+        public String second;
+
+        Pair(String first, String second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
 
     // 背景图缓存文件夹
     private static final String BACKGROUNDS = "BACKGROUNDS";

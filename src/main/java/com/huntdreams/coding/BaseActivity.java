@@ -1,5 +1,8 @@
 package com.huntdreams.coding;
 
+import android.app.Dialog;
+
+import com.huntdreams.coding.common.CustomDialog;
 import com.huntdreams.coding.common.network.NetworkCallback;
 import com.huntdreams.coding.common.umeng.UmengActivity;
 
@@ -23,5 +26,9 @@ public class BaseActivity extends UmengActivity implements NetworkCallback{
     @Override
     public void getNetwork(String uri, String tag) {
 
+    }
+
+    public final void dialogTitleLineColor(Dialog dialog) {
+        CustomDialog.dialogTitleLineColor(this, dialog);
     }
 }

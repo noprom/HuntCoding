@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Coding</string>
+    <string name="app_name">HuntCoding</string>
     <string name="action_settings">设置</string>
     <string name="action_refrush">刷新</string>
     <string name="title_activity_my_activity2">MyActivity2</string>
