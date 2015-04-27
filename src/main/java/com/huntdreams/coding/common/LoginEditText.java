@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.EditText;
 
 import com.huntdreams.coding.R;
@@ -28,18 +29,36 @@ public class LoginEditText extends EditText{
         addTextChangedListener(new SimpleTextWatcher(){
             @Override
             public void afterTextChanged(Editable s) {
-
+                displayDelete(s.length() > 0);
             }
         });
     }
 
     private void displayDelete(boolean show){
-        if(show){
-
+        if (show) {
+            setDrawableRight(mDrawable);
+        } else {
+            setDrawableRight(null);
         }
     }
 
     private void setDrawableRight(Drawable drawable){
         setCompoundDrawables(null,null,drawable,null);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_UP){
+            if(getCompoundDrawables()[2] != null){
+                boolean touchable = event.getX() > (getWidth() - getTotalPaddingRight())
+                        && (event.getX() < ((getWidth() - getPaddingRight())));
+
+                if (touchable) {
+                    this.setText("");
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 }
