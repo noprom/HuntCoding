@@ -5,17 +5,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.huntdreams.coding.common.Global;
 import com.huntdreams.coding.common.LoginBackground;
+import com.huntdreams.coding.common.enter.SimpleTextWatcher;
 import com.huntdreams.coding.third.FastBlur;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.tencent.android.tpush.XGPushManager;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -64,6 +66,14 @@ public class LoginActivity extends BaseActivity {
     final float radius = 8;
     final double scaleFactor = 16;
 
+    private static String HOST_NEED_CAPTCHA = Global.HOST + "/api/captcha/login";
+
+    String HOST_LOGIN = Global.HOST + "/api/login";
+
+    public static String HOST_USER = Global.HOST + "/api/user/key/%s";
+
+    String HOST_USER_RELOGIN = "HOST_USER_RELOGIN";
+
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .showImageForEmptyUri(R.drawable.icon_user_monkey)
             .showImageOnFail(R.drawable.icon_user_monkey)
@@ -80,7 +90,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // 调用下，防止收到上次登陆账号的通知
-        XGPushManager.registerPush(this, "*");
+//        XGPushManager.registerPush(this, "*");
     }
 
     @AfterViews
@@ -105,6 +115,21 @@ public class LoginActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        needCaptcha();
+
+        editName.addTextChangedListener(textWatcher);
+        editPassword.addTextChangedListener(textWatcher);
+        editValify.addTextChangedListener(textWatcher);
+        upateLoginButton();
+
+        editName.addTextChangedListener(textWatcherName);
+
+    }
+
+
+
+    private void needCaptcha() {
+        getNetwork(HOST_NEED_CAPTCHA, HOST_NEED_CAPTCHA);
     }
 
     private BitmapDrawable createBlur(){
@@ -147,5 +172,40 @@ public class LoginActivity extends BaseActivity {
         Bitmap blurBitmap = FastBlur.doBlur(bitmap, (int) radius, true);
 
         return new BitmapDrawable(getResources(), blurBitmap);
+    }
+
+    TextWatcher textWatcher = new SimpleTextWatcher(){
+        @Override
+        public void afterTextChanged(Editable s) {
+            upateLoginButton();
+        }
+    };
+
+    TextWatcher textWatcherName = new SimpleTextWatcher(){
+        @Override
+        public void afterTextChanged(Editable s) {
+            userIcon.setImageResource(R.drawable.icon_user_monkey);
+//            userIcon.setBackgroundResource(R.drawable.icon_user_monkey);
+        }
+    };
+
+    private void upateLoginButton(){
+        if(editName.getText().length() == 0){
+            loginButton.setEnabled(false);
+            return;
+        }
+
+        if(editPassword.getText().length() == 0){
+            loginButton.setEnabled(false);
+            return;
+        }
+
+        if (captchaLayout.getVisibility() == View.VISIBLE &&
+                editValify.getText().length() == 0) {
+            loginButton.setEnabled(false);
+            return;
+        }
+
+        loginButton.setEnabled(true);
     }
 }

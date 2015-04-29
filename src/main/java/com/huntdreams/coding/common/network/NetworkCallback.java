@@ -13,5 +13,5 @@ import org.json.JSONObject;
 public interface NetworkCallback {
     void parseJson(int code, JSONObject respanse, String tag, int pos, Object data) throws JSONException;
 
-    void getNetwork(String uri, String tag);
+    void getNetwork(String url, String tag);
 }
