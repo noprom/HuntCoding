@@ -14,15 +14,22 @@ import android.widget.ImageView;
 import com.huntdreams.coding.common.Global;
 import com.huntdreams.coding.common.LoginBackground;
 import com.huntdreams.coding.common.enter.SimpleTextWatcher;
+import com.huntdreams.coding.common.network.MyAsyncHttpClient;
 import com.huntdreams.coding.third.FastBlur;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.tencent.android.tpush.XGPushManager;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.apache.http.Header;
 
 import java.io.File;
 
@@ -35,6 +42,8 @@ import java.io.File;
  */
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity {
+
+    private static final String TAG = "LoginActivity";
 
     @Extra
     Uri background;
@@ -90,30 +99,28 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // 调用下，防止收到上次登陆账号的通知
-//        XGPushManager.registerPush(this, "*");
+        XGPushManager.registerPush(this, "*");
     }
 
     @AfterViews
-    void init(){
-        if(background == null){
+    void init() {
+        if (background == null) {
             LoginBackground.PhotoItem photoItem = new LoginBackground(this).getPhoto();
             File file = photoItem.getCacheFile(this);
-            if(file.exists()){
+            if (file.exists()) {
                 background = Uri.fromFile(file);
             }
         }
 
-        try{
+        try { // TODO 图片载入可能失败，因为图片没有下载完
             BitmapDrawable bitmapDrawable;
-            if(background == null){
+            if (background == null) {
                 bitmapDrawable = createBlur();
-            }else{
+            } else {
                 bitmapDrawable = createBlur(background);
             }
             backgroundImage.setImageDrawable(bitmapDrawable);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
         needCaptcha();
 
@@ -123,13 +130,6 @@ public class LoginActivity extends BaseActivity {
         upateLoginButton();
 
         editName.addTextChangedListener(textWatcherName);
-
-    }
-
-
-
-    private void needCaptcha() {
-        getNetwork(HOST_NEED_CAPTCHA, HOST_NEED_CAPTCHA);
     }
 
     private BitmapDrawable createBlur(){
@@ -172,6 +172,59 @@ public class LoginActivity extends BaseActivity {
         Bitmap blurBitmap = FastBlur.doBlur(bitmap, (int) radius, true);
 
         return new BitmapDrawable(getResources(), blurBitmap);
+    }
+
+    @Click
+    void imageValify(){
+        editValify.requestFocus();
+        downloadValifyPhoto();
+    }
+
+    private void needCaptcha() {
+        getNetwork(HOST_NEED_CAPTCHA, HOST_NEED_CAPTCHA);
+    }
+
+    private void downloadValifyPhoto(){
+        String host = Global.HOST + "/api/getCaptcha";
+        AsyncHttpClient client = MyAsyncHttpClient.createClient(this);
+
+        client.get(host,new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                imageValify.setImageBitmap(BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length));
+                editValify.setText("");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                showMiddleToast("获取验证码失败");
+            }
+        });
+    }
+
+    @Click
+    protected final void loginButton(){
+        try{
+            String name = editName.getText().toString();
+            String password = editPassword.getText().toString();
+            String captcha = editValify.getText().toString();
+
+            if(name.isEmpty()){
+                showMiddleToast("邮箱或个性后缀不能为空");
+                return;
+            }
+
+            if (password.isEmpty()) {
+                showMiddleToast("密码不能为空");
+                return;
+            }
+
+            RequestParams params = new RequestParams();
+            params.put("email",name);
+//            params.put("password",);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     TextWatcher textWatcher = new SimpleTextWatcher(){
