@@ -1,6 +1,7 @@
 package com.huntdreams.coding;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import com.huntdreams.coding.common.CustomDialog;
 import com.huntdreams.coding.common.network.NetworkCallback;
 import com.huntdreams.coding.common.network.NetworkImpl;
 import com.huntdreams.coding.common.umeng.UmengActivity;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,14 +30,29 @@ public class BaseActivity extends UmengActivity implements NetworkCallback{
 
     private NetworkImpl networkImpl;
 
+    private ProgressDialog mProgressDialog;
+
+    protected void showProgressBar(boolean show){
+        showProgressBar(show,"");
+    }
+
+    protected void showProgressBar(boolean show,String message){
+        if(show){
+            mProgressDialog.setMessage(message);
+            mProgressDialog.show();
+        }else{
+            mProgressDialog.hide();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         networkImpl = new NetworkImpl(this, this);
 
-//        mProgressDialog = new ProgressDialog(this);
-//        mProgressDialog.setIndeterminate(true);
-//        mProgressDialog.setCancelable(false);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
 
         mInflater = getLayoutInflater();
 //        initSetting();
@@ -47,6 +64,10 @@ public class BaseActivity extends UmengActivity implements NetworkCallback{
     @Override
     public void parseJson(int code, JSONObject respanse, String tag, int pos, Object data) throws JSONException {
 
+    }
+
+    protected void postNetwork(String url, RequestParams params, final String tag) {
+        networkImpl.loadData(url, params, tag, -1, null, NetworkImpl.Request.Post);
     }
 
     @Override

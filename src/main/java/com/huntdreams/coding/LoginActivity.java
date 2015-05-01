@@ -13,8 +13,10 @@ import android.widget.ImageView;
 
 import com.huntdreams.coding.common.Global;
 import com.huntdreams.coding.common.LoginBackground;
+import com.huntdreams.coding.common.SimpleSHA1;
 import com.huntdreams.coding.common.enter.SimpleTextWatcher;
 import com.huntdreams.coding.common.network.MyAsyncHttpClient;
+import com.huntdreams.coding.model.UserObject;
 import com.huntdreams.coding.third.FastBlur;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -30,6 +32,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -221,9 +225,33 @@ public class LoginActivity extends BaseActivity {
 
             RequestParams params = new RequestParams();
             params.put("email",name);
-//            params.put("password",);
+            params.put("password", SimpleSHA1.sha1(password));
+            if(captchaLayout.getVisibility() == View.VISIBLE){
+                params.put("j_captcha",captcha);
+            }
+            params.put("remember_me",true);
+
+            postNetwork(HOST_LOGIN, params, HOST_LOGIN);
+            showProgressBar(true);
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void parseJson(int code, JSONObject respanse, String tag, int pos, Object data) throws JSONException {
+        super.parseJson(code, respanse, tag, pos, data);
+        if(tag.equals(HOST_LOGIN)){
+            if(code == 0){
+                UserObject user = new UserObject(respanse.getJSONObject("data"));
+                getNetwork(String.format(HOST_USER, user.global_key), HOST_USER);
+                showProgressBar(true);
+            }else{
+                String msg = Global.getErrorMsg(respanse);
+                showMiddleToast(msg);
+                needCaptcha();
+                showProgressBar(false);
+            }
         }
     }
 
