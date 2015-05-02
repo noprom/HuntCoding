@@ -5,13 +5,18 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.huntdreams.coding.common.CustomDialog;
+import com.huntdreams.coding.common.Global;
+import com.huntdreams.coding.common.ImageLoadTool;
 import com.huntdreams.coding.common.network.NetworkCallback;
 import com.huntdreams.coding.common.network.NetworkImpl;
 import com.huntdreams.coding.common.umeng.UmengActivity;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +32,8 @@ import org.json.JSONObject;
 public class BaseActivity extends UmengActivity implements NetworkCallback{
 
     protected LayoutInflater mInflater;
+
+    private ImageLoadTool imageLoadTool = new ImageLoadTool();
 
     private NetworkImpl networkImpl;
 
@@ -75,9 +82,6 @@ public class BaseActivity extends UmengActivity implements NetworkCallback{
         networkImpl.loadData(url, null, tag, -1, null, NetworkImpl.Request.Get);
     }
 
-    public final void dialogTitleLineColor(Dialog dialog) {
-        CustomDialog.dialogTitleLineColor(this, dialog);
-    }
 
     protected void showButtomToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -91,5 +95,36 @@ public class BaseActivity extends UmengActivity implements NetworkCallback{
         Toast toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    protected void iconfromNetwork(ImageView view, String url) {
+        imageLoadTool.loadImage(view, Global.makeSmallUrl(view, url));
+    }
+
+    protected void iconfromNetwork(ImageView view, String url, SimpleImageLoadingListener animate) {
+        imageLoadTool.loadImage(view, Global.makeSmallUrl(view, url), animate);
+    }
+
+    protected void imagefromNetwork(ImageView view, String url) {
+        imageLoadTool.loadImageFromUrl(view, url);
+    }
+
+    protected void imagefromNetwork(ImageView view, String url, DisplayImageOptions options) {
+        imageLoadTool.loadImageFromUrl(view, url, options);
+    }
+
+    public final void dialogTitleLineColor(Dialog dialog) {
+        CustomDialog.dialogTitleLineColor(this, dialog);
+    }
+
+    protected void showErrorMsg(int code, JSONObject json) {
+        if (code == NetworkImpl.NETWORK_ERROR) {
+            showButtomToast(R.string.connect_service_fail);
+        } else {
+            String msg = Global.getErrorMsg(json);
+            if (!msg.isEmpty()) {
+                showButtomToast(msg);
+            }
+        }
     }
 }

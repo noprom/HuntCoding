@@ -12,13 +12,22 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.widget.ImageView;
 
+import com.huntdreams.coding.MyApp;
+import com.loopj.android.http.PersistentCookieStore;
+
+import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * 全局配置文件
@@ -105,6 +114,78 @@ public class Global {
             }
         }
         return false;
+    }
+
+    /**
+     * 同步cookie
+     * @param context
+     */
+    public static void syncCookie(Context context){
+        PersistentCookieStore cookieStore = new PersistentCookieStore(context);
+        List<Cookie> cookies = cookieStore.getCookies();
+
+        CookieSyncManager.createInstance(context);
+        CookieManager cookieManager = CookieManager.getInstance();
+
+        for(int i=0,size = cookies.size();i < size;++i){
+            Cookie eachCookie = cookies.get(i);
+            String cookieString  = eachCookie.getName()+"="+eachCookie.getValue();
+            cookieManager.setCookie(Global.HOST,cookieString);
+        }
+
+        CookieSyncManager.getInstance().sync();
+    }
+
+    public static String makeLargeUrl(String url) {
+        final int MAX = 4096; // ImageView显示的图片不能大于这个数
+        return String.format(IMAGE_URL_SCAL, url, 4096, 4096);
+    }
+
+    private static String intToString(int length) {
+        String width;
+        if (length > 0) {
+            width = String.valueOf(length);
+        } else {
+            width = "";
+        }
+
+        return width;
+    }
+
+    public static int dpToPx(int dpValue) {
+        return (int) (dpValue * MyApp.sScale + 0.5f);
+    }
+
+    public static int pxToDp(float pxValue) {
+        return (int) (pxValue / MyApp.sScale + 0.5f);
+    }
+
+    private static final String IMAGE_URL_SCAL = "%s?imageMogr2/thumbnail/!%s";
+
+    public static String makeSmallUrl(ImageView view, String url) {
+        String realUrl = url.split("\\?")[0];
+
+        if (url.indexOf("http") == 0) {
+            // 头像再裁剪需要算坐标，就不改参数了
+            // https://dn-coding-net-production-static.qbox.me/c28b97dd-61f2-41d4-bd7e-b04f0c634751.jpg?imageMogr2/auto-orient/format/jpeg/crop/!164x164a568a38
+            if (url.contains("/crop/")) {
+                return url;
+            }
+
+            ViewGroup.LayoutParams lp = view.getLayoutParams();
+            String width = intToString(lp.width);
+            String height = intToString(lp.height);
+
+            // 如果初始化的时候没有长宽，默认取高度为200dp缩略图
+            if (width.isEmpty() && height.isEmpty()) {
+                height = String.valueOf(Global.dpToPx(200));
+                width = String.valueOf(Global.dpToPx(200));
+
+            }
+            return String.format(IMAGE_URL_SCAL, realUrl, width);
+        } else {
+            return realUrl;
+        }
     }
 
     /**

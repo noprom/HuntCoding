@@ -1,5 +1,6 @@
 package com.huntdreams.coding;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import com.huntdreams.coding.common.LoginBackground;
 import com.huntdreams.coding.common.SimpleSHA1;
 import com.huntdreams.coding.common.enter.SimpleTextWatcher;
 import com.huntdreams.coding.common.network.MyAsyncHttpClient;
+import com.huntdreams.coding.model.AccountInfo;
 import com.huntdreams.coding.model.UserObject;
 import com.huntdreams.coding.third.FastBlur;
 import com.loopj.android.http.AsyncHttpClient;
@@ -240,7 +242,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void parseJson(int code, JSONObject respanse, String tag, int pos, Object data) throws JSONException {
-        super.parseJson(code, respanse, tag, pos, data);
         if(tag.equals(HOST_LOGIN)){
             if(code == 0){
                 UserObject user = new UserObject(respanse.getJSONObject("data"));
@@ -251,6 +252,35 @@ public class LoginActivity extends BaseActivity {
                 showMiddleToast(msg);
                 needCaptcha();
                 showProgressBar(false);
+            }
+        }else if(tag.equals(HOST_USER)){
+            if(code == 0) {
+                showProgressBar(true);
+                UserObject user = new UserObject(respanse.getJSONObject("data"));
+                AccountInfo.saveAccount(this, user);
+                MyApp.sUserObject = user;
+                AccountInfo.saveReloginInfo(this, user.email, user.global_key);
+
+                Global.syncCookie(this);
+                finish();
+                startActivity(new Intent(LoginActivity.this, EntranceActivity_.class));
+            }else{
+                showProgressBar(false);
+                showErrorMsg(code, respanse);
+            }
+        }else if(tag.equals(HOST_NEED_CAPTCHA)){
+            if (code == 0) {
+                if (respanse.getBoolean("data")) {
+                    captchaLayout.setVisibility(View.VISIBLE);
+                    downloadValifyPhoto();
+                }
+            } else {
+                showErrorMsg(code, respanse);
+            }
+        } else if (tag.equals(HOST_USER_RELOGIN)) {
+            if (code == 0) {
+                UserObject user = new UserObject(respanse.getJSONObject("data"));
+                imagefromNetwork(userIcon, user.avatar, options);
             }
         }
     }
