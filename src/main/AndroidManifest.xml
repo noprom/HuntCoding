@@ -37,6 +37,10 @@
             android:name="com.huntdreams.coding.LoginActivity_"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name="com.huntdreams.coding.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
     </application>
 
 </manifest>
