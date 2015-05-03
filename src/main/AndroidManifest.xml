@@ -13,8 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.huntdreams.coding.MyApp"
@@ -35,11 +34,18 @@
         </activity>
         <activity
             android:name="com.huntdreams.coding.LoginActivity_"
-            android:label="@string/title_activity_login" >
-        </activity>
+            android:icon="@drawable/ic_lancher"
+            android:label="@string/title_activity_login"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoActionbar" />
         <activity
             android:name="com.huntdreams.coding.RegisterActivity"
             android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name="com.huntdreams.coding.BaseAnnotationActivity"
+            android:label="@string/title_activity_base_annotation" >
         </activity>
     </application>
 

@@ -1,39 +1,46 @@
 package com.huntdreams.coding;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Html;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
-public class RegisterActivity extends ActionBarActivity {
+@EActivity(R.layout.activity_register)
+public class RegisterActivity extends BaseAnnotationActivity{
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+    @ViewById
+    EditText editName;
+
+    @ViewById
+    EditText editGlobal;
+
+    @ViewById
+    ImageView imageValify;
+
+    @ViewById
+    EditText editValify;
+
+    @ViewById
+    View captchaLayout;
+
+    @ViewById
+    View valifyDivide;
+
+    @ViewById
+    View loginButton;
+
+    @ViewById
+    TextView textClause;
+
+    @AfterViews
+    void init(){
+        textClause.setText(Html.fromHtml("点击立即体验，即表示同意<font color=\"#3bbd79\">《coding服务条款》</font>"));
+
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
