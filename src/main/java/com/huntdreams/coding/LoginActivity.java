@@ -186,6 +186,13 @@ public class LoginActivity extends BaseActivity {
         downloadValifyPhoto();
     }
 
+    final private int RESULT_CLOSE = 100;
+
+    @Click
+    void register() {
+        RegisterActivity_.intent(this).startForResult(RESULT_CLOSE);
+    }
+
     private void needCaptcha() {
         getNetwork(HOST_NEED_CAPTCHA, HOST_NEED_CAPTCHA);
     }

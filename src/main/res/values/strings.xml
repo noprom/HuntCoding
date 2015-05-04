@@ -105,5 +105,6 @@
     <string name="title_activity_project_set">项目设置</string>
     <string name="title_activity_project_advance_set">高级设置</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

@@ -40,16 +40,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionbar" />
         <activity
-            android:name="com.huntdreams.coding.RegisterActivity"
+            android:name="com.huntdreams.coding.RegisterActivity_"
             android:label="@string/title_activity_register" >
         </activity>
         <activity
-            android:name="com.huntdreams.coding.BaseAnnotationActivity"
+            android:name="com.huntdreams.coding.BaseAnnotationActivity_"
             android:label="@string/title_activity_base_annotation" >
         </activity>
         <activity
             android:name="com.huntdreams.coding.TermsActivity"
             android:label="@string/title_activity_terms" >
+        </activity>
+        <activity
+            android:name="com.huntdreams.coding.MainActivity_"
+            android:label="@string/title_activity_main" >
         </activity>
     </application>
 
