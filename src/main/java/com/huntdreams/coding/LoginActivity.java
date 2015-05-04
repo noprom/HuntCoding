@@ -1,5 +1,8 @@
 package com.huntdreams.coding;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.huntdreams.coding.common.Global;
 import com.huntdreams.coding.common.LoginBackground;
@@ -32,6 +36,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -77,6 +82,9 @@ public class LoginActivity extends BaseActivity {
 
     @ViewById
     View loginButton;
+
+    @ViewById
+    TextView loginFail;
 
     final float radius = 8;
     final double scaleFactor = 16;
@@ -193,6 +201,13 @@ public class LoginActivity extends BaseActivity {
         RegisterActivity_.intent(this).startForResult(RESULT_CLOSE);
     }
 
+    @OnActivityResult(RESULT_CLOSE)
+    void resultRegiter(int result) {
+        if (result == Activity.RESULT_OK) {
+            finish();
+        }
+    }
+
     private void needCaptcha() {
         getNetwork(HOST_NEED_CAPTCHA, HOST_NEED_CAPTCHA);
     }
@@ -245,6 +260,17 @@ public class LoginActivity extends BaseActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Click
+    protected final void loginFail(){
+        String[] listTitles = getResources().getStringArray(R.array.dialog_login_fail_help);
+        new AlertDialog.Builder(this).setItems(listTitles,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO
+            }
+        }).show();
     }
 
     @Override
