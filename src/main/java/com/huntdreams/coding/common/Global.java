@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.huntdreams.coding.MyApp;
@@ -23,6 +25,9 @@ import com.loopj.android.http.PersistentCookieStore;
 import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -361,4 +366,43 @@ public class Global {
     }
 
     public static DecimalFormat df = new java.text.DecimalFormat("#.00");
+
+    /**
+     * 初始化webview配置
+     * @param webView
+     */
+    public static void initWebView(WebView webView){
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        // 防止webView滚动时背景变成黑色
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            webView.setBackgroundColor(0x00000000);
+        } else {
+            webView.setBackgroundColor(Color.argb(1, 0, 0, 0));
+        }
+
+        webView.getSettings().setDefaultTextEncodingName("UTF-8");
+    }
+
+    /**
+     * 从文件里面读文字数据
+     * @param inputStream
+     * @return
+     */
+    public static String readTextFile(InputStream inputStream){
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte buf[] = new byte[1024];
+        int len;
+        try{
+            while((len = inputStream.read(buf)) != -1){
+                outputStream.write(buf,0,len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputStream.toString();
+    }
+
 }

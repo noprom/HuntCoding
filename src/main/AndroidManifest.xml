@@ -47,6 +47,10 @@
             android:name="com.huntdreams.coding.BaseAnnotationActivity"
             android:label="@string/title_activity_base_annotation" >
         </activity>
+        <activity
+            android:name="com.huntdreams.coding.TermsActivity"
+            android:label="@string/title_activity_terms" >
+        </activity>
     </application>
 
 </manifest>
