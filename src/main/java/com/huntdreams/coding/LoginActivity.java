@@ -296,7 +296,7 @@ public class LoginActivity extends BaseActivity {
 
                 Global.syncCookie(this);
                 finish();
-                startActivity(new Intent(LoginActivity.this, EntranceActivity_.class));
+                startActivity(new Intent(LoginActivity.this, MainActivity_.class));
             }else{
                 showProgressBar(false);
                 showErrorMsg(code, respanse);
