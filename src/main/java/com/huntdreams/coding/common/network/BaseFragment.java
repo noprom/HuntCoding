@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.huntdreams.coding.FootUpdate;
 import com.huntdreams.coding.R;
 
 import org.json.JSONException;
@@ -21,11 +22,11 @@ import org.json.JSONObject;
  * @version 1.0
  *          Created by noprom on 2015/5/22.
  */
-public class BaseFragment extends Fragment implements NetworkCallback {
+public class BaseFragment extends Fragment implements NetworkCallback ,FootUpdate.LoadMore{
 
 
     public BaseFragment() {
-        // Required empty public constructor
+
     }
 
 
@@ -45,6 +46,11 @@ public class BaseFragment extends Fragment implements NetworkCallback {
 
     @Override
     public void getNetwork(String url, String tag) {
+
+    }
+
+    @Override
+    public void loadMore() {
 
     }
 }
